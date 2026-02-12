@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; margin-bottom: 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        input[type="text"]:focus, input[type="password"]:focus { outline: none; border-color: #007bff; }
+        .error { color: #dc3545; font-size: 12px; margin-top: 5px; }
+        button { background-color: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        .cancel-btn { background-color: #6c757d; margin-left: 10px; }
+        .cancel-btn:hover { background-color: #5a6268; }
+        .form-actions { margin-top: 30px; display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Edit User</h2>
+    <a th:href="@{/admin/}" class="back-link">← Back to Admin Panel</a>
+
+    <form th:action="@{/admin/edit}" th:object="${user}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" readonly />
+            <span class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" th:field="*{password}" placeholder="Leave blank to keep current password" />
+            <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" required />
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" th:field="*{surname}" required />
+            <span class="error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Roles:</label>
+            <div th:each="role : ${allRoles}">
+                <input type="checkbox"
+                       th:field="*{roleIds}"
+                       th:value="${role.id}" />
+                <span th:text="${role.name}"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Update User</button>
+            <a th:href="@{/admin/}" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
