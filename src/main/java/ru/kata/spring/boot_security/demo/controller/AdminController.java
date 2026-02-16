@@ -5,15 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
+
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -49,8 +46,7 @@ public class AdminController {
             model.addAttribute("allRoles", roleService.findAll());
             return "admin/adduser";
         }
-        Set<Role> roles = getRolesFromIds(user.getRoleIds());
-        user.setRoles(roles);
+        user.setRoles(userService.getRolesByIds(user.getRoleIds()));
         userService.addUser(user);
         return "redirect:/admin/";
     }
@@ -60,8 +56,8 @@ public class AdminController {
         User user = userService.findById(id);
         if (user.getRoles() != null) {
             user.setRoleIds(user.getRoles().stream()
-                    .map(Role::getId)
-                    .collect(Collectors.toList()));
+                    .map(role -> role.getId())
+                    .collect(java.util.stream.Collectors.toList()));
         }
         model.addAttribute("user", user);
         model.addAttribute("allRoles", roleService.findAll());
@@ -76,8 +72,7 @@ public class AdminController {
             model.addAttribute("allRoles", roleService.findAll());
             return "admin/edituser";
         }
-        Set<Role> roles = getRolesFromIds(user.getRoleIds());
-        user.setRoles(roles);
+        user.setRoles(userService.getRolesByIds(user.getRoleIds()));
         userService.editUser(user);
         return "redirect:/admin/";
     }
@@ -86,12 +81,5 @@ public class AdminController {
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin/";
-    }
-
-    private Set<Role> getRolesFromIds(List<Long> roleIds) {
-        if (roleIds == null) return new HashSet<>();
-        return roleIds.stream()
-                .map(roleService::findById)
-                .collect(Collectors.toSet());
     }
 }

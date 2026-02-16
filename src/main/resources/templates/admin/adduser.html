@@ -2,51 +2,164 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add User</title>
+    <title>Add New User</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: inline-block; width: 100px; }
-        .error { color: red; font-size: 12px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .checkbox-group {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .checkbox-item {
+            margin: 5px 0;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.1);
+        }
+        .error {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .form-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
     </style>
 </head>
 <body>
-<h2>Add New User</h2>
-<a th:href="@{/admin/}">Back to Admin Panel</a><br><br>
+<div class="container">
+    <h2>Add New User</h2>
 
-<form th:action="@{/admin}" th:object="${user}" method="post">
-    <div class="form-group">
-        <label>Username:</label>
-        <input type="text" th:field="*{username}" required />
-        <span class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-    </div>
-    <div class="form-group">
-        <label>Password:</label>
-        <input type="password" th:field="*{password}" required />
-        <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-    </div>
-    <div class="form-group">
-        <label>Name:</label>
-        <input type="text" th:field="*{name}" required />
-        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-    </div>
-    <div class="form-group">
-        <label>Surname:</label>
-        <input type="text" th:field="*{surname}" required />
-        <span class="error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
-    </div>
-    <div class="form-group">
-        <label>Roles:</label>
-        <div th:each="role : ${allRoles}">
-            <input type="checkbox"
-                   th:field="*{roleIds}"
-                   th:value="${role.id}" />
-            <span th:text="${role.name}"></span>
+    <a th:href="@{/admin/}" class="back-link">← Back to Admin Panel</a>
+
+    <form th:action="@{/admin}" th:object="${user}" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" required />
+            <span class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
         </div>
-    </div>
-    <div class="form-group">
-        <button type="submit">Create User</button>
-    </div>
-</form>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" th:field="*{password}" required />
+            <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" required />
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" th:field="*{surname}" required />
+            <span class="error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Roles:</label>
+            <div class="checkbox-group">
+                <div th:each="role : ${allRoles}" class="checkbox-item">
+                    <input type="checkbox"
+                           th:field="*{roleIds}"
+                           th:value="${role.id}" />
+                    <span th:text="${role.name}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create User</button>
+            <a th:href="@{/admin/}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 </body>
 </html>
