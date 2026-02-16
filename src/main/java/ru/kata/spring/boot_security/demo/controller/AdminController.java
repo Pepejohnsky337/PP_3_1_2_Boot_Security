@@ -52,7 +52,6 @@ public class AdminController {
 
     @GetMapping("/edit")
     public String editUserForm(@RequestParam("id") Long id, Model model) {
-        // Используем метод сервиса, который уже заполняет roleIds
         User user = userService.prepareUserForEdit(id);
         model.addAttribute("user", user);
         model.addAttribute("allRoles", roleService.findAll());
