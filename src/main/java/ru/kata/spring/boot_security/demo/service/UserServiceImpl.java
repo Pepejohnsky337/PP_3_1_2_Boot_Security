@@ -50,6 +50,9 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
+        if (user.getRoleIds() != null) {
+            user.setRoles(getRolesByIds(user.getRoleIds()));
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
     }
@@ -65,6 +68,9 @@ public class UserServiceImpl implements UserService {
     public void editUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
+        }
+        if (user.getRoleIds() != null) {
+            user.setRoles(getRolesByIds(user.getRoleIds()));
         }
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             User existing = findById(user.getId());
@@ -83,5 +89,16 @@ public class UserServiceImpl implements UserService {
         return roleIds.stream()
                 .map(roleService::findById)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public User prepareUserForEdit(Long id) {
+        User user = findById(id);
+        if (user != null && user.getRoles() != null) {
+            user.setRoleIds(user.getRoles().stream()
+                    .map(Role::getId)
+                    .collect(Collectors.toList()));
+        }
+        return user;
     }
 }

@@ -46,19 +46,14 @@ public class AdminController {
             model.addAttribute("allRoles", roleService.findAll());
             return "admin/adduser";
         }
-        user.setRoles(userService.getRolesByIds(user.getRoleIds()));
         userService.addUser(user);
         return "redirect:/admin/";
     }
 
     @GetMapping("/edit")
     public String editUserForm(@RequestParam("id") Long id, Model model) {
-        User user = userService.findById(id);
-        if (user.getRoles() != null) {
-            user.setRoleIds(user.getRoles().stream()
-                    .map(role -> role.getId())
-                    .collect(java.util.stream.Collectors.toList()));
-        }
+        // Используем метод сервиса, который уже заполняет roleIds
+        User user = userService.prepareUserForEdit(id);
         model.addAttribute("user", user);
         model.addAttribute("allRoles", roleService.findAll());
         return "admin/edituser";
@@ -72,7 +67,6 @@ public class AdminController {
             model.addAttribute("allRoles", roleService.findAll());
             return "admin/edituser";
         }
-        user.setRoles(userService.getRolesByIds(user.getRoleIds()));
         userService.editUser(user);
         return "redirect:/admin/";
     }

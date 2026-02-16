@@ -14,4 +14,5 @@ public interface UserService {
     User findById(Long id);
     User findByUsername(String username);
     Set<Role> getRolesByIds(List<Long> roleIds);
+    User prepareUserForEdit(Long id);
 }
